@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Req, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, Param, HttpException, HttpStatus, BadRequestException, Res } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateCatsDto } from './dto/create-cats-dto';
 import { CatsService } from './cats.service';
@@ -15,11 +15,16 @@ export class CatsController {
 
     @Get(":id")
     findOne(@Param("id") id: string): string {
-        return `This is the id you passed "${id}"`
+        throw new BadRequestException("Something Bad", {cause: new Error(), description: "Maybe there is error"})
     }
 
     @Post()
-    async create(@Body() body: CreateCatsDto){
+    async create(@Body() body: CreateCatsDto): Promise<Object>{
         this.catService.create(body)
+
+        return {
+            status_code: HttpStatus.CREATED,
+            message: "Cat created"
+        }
     }
 }
