@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { User } from './user.entity';
+import { UserDTO } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -10,11 +11,20 @@ export class UserService {
         private userRepository: Repository<User>
     ){}
 
-    findAll(): Promise<User[]>{
-        return this.userRepository.find();
+    async findAll(): Promise<User[]>{
+        console.log(this.userRepository);
+        return await this.userRepository.find();
     }
 
-    // async create(): Promise<User[]>{
-    //     return this.userRepository.create()
-    // }
+    async create(userDto: UserDTO): Promise<User> {
+        try {
+            const user: DeepPartial<User> = userDto
+            const newUser = this.userRepository.create(user)
+            console.log(newUser);
+            return await this.userRepository.save(newUser)
+        } catch (error) {
+            console.error(error)
+            throw new Error(error)
+        }
+    }
 }
