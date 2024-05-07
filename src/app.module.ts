@@ -16,7 +16,8 @@ import { UserModule } from './user/user.module';
       password: "irel*123",
       database: "simple_db",
       entities: [User],
-      synchronize: false
+      synchronize: false,
+      autoLoadEntities: true
     }),
     UserModule
   ],

@@ -1,8 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from "typeorm";
+import { UUID } from "crypto";
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, OneToOne, JoinColumn } from "typeorm";
 
 @Entity({name: "users"})
 export class User {
-    @PrimaryColumn()
+    @PrimaryColumn('uuid')
     user_id: string
 
     @Column()
@@ -17,6 +18,25 @@ export class User {
     @Column()
     phone_number: string
 
-    @Column({default: true})
+    @PrimaryGeneratedColumn()
     isActive: boolean
+
+    @Column()
+    birth_day: Date
 }
+
+@Entity({name: "users_login_credentials"})
+export class LoginCredentials {
+    @PrimaryGeneratedColumn('uuid')
+    credential_id: string
+
+    @Column("uuid")
+    user_id: string
+
+    @Column()
+    user_name: string
+
+    @Column()
+    password: string
+    
+} 
