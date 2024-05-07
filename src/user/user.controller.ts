@@ -9,18 +9,22 @@ export class UserController {
     constructor(private userService: UserService){}
     
     @Get()
-    async findAll(): Promise<User[]> {
-        return await this.userService.findAll()
+    async findAll(): Promise<Object> {
+        const users = await this.userService.findAll()
+        return {
+            success: true,
+            users: users
+        }
     }
 
-    @Post()
+    @Post('register')
     async create(@Body() body: UserDTO): Promise<object> {
         try {
 
             await this.userService.create(body)
 
             return {
-                status_code: HttpStatus.CREATED,
+                success: true,
                 message: "User Created"
             }
         } catch (error) {
